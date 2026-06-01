@@ -178,10 +178,7 @@
       margin-top: 1rem;
     }
 
-    .final-answer .step-header {
-      color: #4ade80;
-    }
-
+    .final-answer .step-header { color: #4ade80; }
     .final-answer .step-text {
       color: #86efac;
       font-size: 16px;
@@ -255,7 +252,6 @@
     }
 
     function formatSolution(text) {
-      // Split into lines and clean up
       const lines = text.split('\n').map(l => l.trim()).filter(l => l);
       let html = '';
       let currentStepLines = [];
@@ -284,7 +280,6 @@
       }
 
       for (const line of lines) {
-        // Detect step headers like "Step 1:", "Step 2:", etc.
         if (line.match(/^step\s*\d+/i)) {
           flushStep();
           currentStepTitle = line.replace(/\*\*/g, '');
@@ -293,7 +288,6 @@
           currentStepTitle = '✅ Final Answer';
           isFinal = true;
         } else if (line.match(/^#+\s*/)) {
-          // markdown headers
           flushStep();
           currentStepTitle = line.replace(/^#+\s*/, '').replace(/\*\*/g, '');
         } else {
@@ -332,7 +326,18 @@
         }
 
         const solution = data.choices[0].message.content;
-        document.getElementById('resultContent').innerHTML = formatSolution(solution);
+
+        if (solution.startsWith('NOT_MATH:')) {
+          const msg = solution.replace('NOT_MATH:', '').trim();
+          document.getElementById('resultContent').innerHTML = `
+            <div class="step-block">
+              <div class="step-header">⚠️ Not a Math Problem</div>
+              <div class="step-text">${msg}</div>
+            </div>`;
+        } else {
+          document.getElementById('resultContent').innerHTML = formatSolution(solution);
+        }
+
         document.getElementById('result').style.display = 'block';
 
       } catch (err) {

@@ -5,16 +5,20 @@ export default async function handler(req, res) {
 
   const { problem, imageBase64 } = req.body;
 
-  const prompt = `You are an expert math tutor. Solve the following math problem step by step.
+  const prompt = `You are an expert math tutor. Your job is ONLY to solve math problems.
 
-For each step:
-- Start with "Step 1:", "Step 2:", etc.
+First, check if the input is a valid math problem. If it is NOT a math problem (e.g. it's a general question, random text, or something unrelated to math), respond with exactly this format:
+NOT_MATH: [friendly message explaining you can only solve math problems]
+
+If it IS a math problem, solve it step by step using this format:
+- Start each step with "Step 1:", "Step 2:", etc.
 - State what you are doing in that step in plain English
-- If a formula is used, write it clearly on its own line starting with "Formula:"
+- If a formula is used, write it on its own line starting with "Formula:"
 - Show the calculation clearly
 - Explain why you are doing this step
+- End with "Final Answer:" and the result
 
-At the end, clearly state the final answer.
+If the problem has no solution (like an impossible equation), explain clearly why there is no solution and what that means.
 
 Math Problem: ${problem || "Solve the problem shown in the image"}`;
 
