@@ -132,43 +132,60 @@
     .result-card h2 {
       font-size: 16px;
       color: #5b6af0;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      margin-bottom: 1.5rem;
     }
 
-    .result-content {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #e0e0e0;
-      white-space: pre-wrap;
-    }
-
-    .step {
+    .step-block {
       background: #0f1117;
-      border-left: 3px solid #5b6af0;
-      border-radius: 0 8px 8px 0;
-      padding: 12px 16px;
-      margin: 10px 0;
+      border: 1px solid #2a2d3a;
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1rem;
     }
 
-    .step-title {
-      font-weight: 600;
+    .step-header {
+      font-size: 14px;
+      font-weight: 700;
       color: #5b6af0;
-      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.6rem;
     }
 
-    .formula {
+    .step-text {
+      font-size: 15px;
+      color: #ccc;
+      line-height: 1.8;
+    }
+
+    .formula-block {
       background: #1e2235;
       border: 1px solid #3a3f5c;
-      border-radius: 6px;
-      padding: 6px 12px;
+      border-radius: 8px;
+      padding: 10px 16px;
       font-family: monospace;
-      font-size: 14px;
+      font-size: 15px;
       color: #a5b4fc;
-      display: inline-block;
-      margin: 4px 0;
+      margin: 10px 0;
+      display: block;
+    }
+
+    .final-answer {
+      background: #1a2a1a;
+      border: 1px solid #2d5a2d;
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      margin-top: 1rem;
+    }
+
+    .final-answer .step-header {
+      color: #4ade80;
+    }
+
+    .final-answer .step-text {
+      color: #86efac;
+      font-size: 16px;
+      font-weight: 500;
     }
 
     .loading {
@@ -200,7 +217,7 @@
     <label class="input-label">Type your math problem</label>
     <textarea id="problem" placeholder="e.g. Solve: 2x² + 5x - 3 = 0"></textarea>
 
-    <div class="upload-area" id="uploadArea">
+    <div class="upload-area">
       <input type="file" id="imageInput" accept="image/*" onchange="handleImage(event)" />
       <p>📷 <span>Click to upload</span> or drag an image of your math problem</p>
     </div>
@@ -219,7 +236,7 @@
 
   <div class="result-card" id="result">
     <h2>📘 Step-by-Step Solution</h2>
-    <div class="result-content" id="resultContent"></div>
+    <div id="resultContent"></div>
   </div>
 
   <script>
@@ -228,7 +245,6 @@
     function handleImage(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = (e) => {
         imageBase64 = e.target.result.split(',')[1];
@@ -239,24 +255,53 @@
     }
 
     function formatSolution(text) {
-      const lines = text.split('\n');
+      // Split into lines and clean up
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
       let html = '';
+      let currentStepLines = [];
+      let currentStepTitle = '';
+      let isFinal = false;
 
-      for (let line of lines) {
-        line = line.trim();
-        if (!line) { html += '<br>'; continue; }
+      function flushStep() {
+        if (!currentStepTitle && currentStepLines.length === 0) return;
+        const blockClass = isFinal ? 'step-block final-answer' : 'step-block';
+        html += `<div class="${blockClass}">`;
+        if (currentStepTitle) {
+          html += `<div class="step-header">${currentStepTitle}</div>`;
+        }
+        html += `<div class="step-text">`;
+        for (const line of currentStepLines) {
+          if (line.match(/^formula:/i)) {
+            html += `<span class="formula-block">${line.replace(/^formula:\s*/i, '')}</span>`;
+          } else {
+            html += `${line}<br>`;
+          }
+        }
+        html += `</div></div>`;
+        currentStepLines = [];
+        currentStepTitle = '';
+        isFinal = false;
+      }
 
-        if (line.match(/^(step\s*\d+|##)/i)) {
-          html += `<div class="step"><div class="step-title">${line}</div>`;
-        } else if (line.match(/^formula:/i)) {
-          html += `<div class="formula">${line}</div>`;
-        } else if (line.startsWith('**') && line.endsWith('**')) {
-          html += `<strong>${line.replace(/\*\*/g, '')}</strong><br>`;
+      for (const line of lines) {
+        // Detect step headers like "Step 1:", "Step 2:", etc.
+        if (line.match(/^step\s*\d+/i)) {
+          flushStep();
+          currentStepTitle = line.replace(/\*\*/g, '');
+        } else if (line.match(/^(final answer|conclusion|answer|result):/i) || line.match(/^#+\s*(final|answer)/i)) {
+          flushStep();
+          currentStepTitle = '✅ Final Answer';
+          isFinal = true;
+        } else if (line.match(/^#+\s*/)) {
+          // markdown headers
+          flushStep();
+          currentStepTitle = line.replace(/^#+\s*/, '').replace(/\*\*/g, '');
         } else {
-          html += `${line}<br>`;
+          currentStepLines.push(line.replace(/\*\*/g, ''));
         }
       }
 
+      flushStep();
       return html;
     }
 
