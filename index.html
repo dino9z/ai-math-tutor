@@ -9,73 +9,86 @@
 
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #0f1117;
-      color: #e0e0e0;
+      background: #f4f6fb;
+      color: #1a1a2e;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem 1rem;
+      padding: 2rem 1rem 4rem;
     }
 
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 0.3rem;
-    }
-
-    .subtitle {
-      color: #888;
-      font-size: 14px;
+    .header {
+      text-align: center;
       margin-bottom: 2rem;
     }
 
-    .card {
-      background: #1a1d27;
-      border: 1px solid #2a2d3a;
-      border-radius: 16px;
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.5px;
+    }
+
+    .header h1 span { color: #4f46e5; }
+
+    .header p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .input-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
       padding: 1.5rem;
       width: 100%;
-      max-width: 720px;
-      margin-bottom: 1.5rem;
+      max-width: 780px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
 
     .input-label {
-      font-size: 13px;
-      color: #888;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       margin-bottom: 8px;
       display: block;
     }
 
     textarea {
       width: 100%;
-      background: #0f1117;
-      border: 1px solid #2a2d3a;
-      border-radius: 10px;
-      color: #e0e0e0;
+      background: #f9fafb;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 12px;
+      color: #1a1a2e;
       font-size: 15px;
-      padding: 12px;
+      padding: 12px 14px;
       resize: vertical;
       min-height: 80px;
       outline: none;
       font-family: inherit;
+      transition: border-color 0.2s;
     }
 
-    textarea:focus { border-color: #5b6af0; }
+    textarea:focus { border-color: #4f46e5; background: white; }
 
     .upload-area {
-      border: 2px dashed #2a2d3a;
-      border-radius: 10px;
-      padding: 1.5rem;
+      border: 2px dashed #d1d5db;
+      border-radius: 12px;
+      padding: 1.2rem;
       text-align: center;
       cursor: pointer;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
       margin-top: 1rem;
       position: relative;
+      background: #f9fafb;
     }
 
-    .upload-area:hover { border-color: #5b6af0; }
+    .upload-area:hover { border-color: #4f46e5; background: #eef2ff; }
 
     .upload-area input {
       position: absolute;
@@ -86,133 +99,261 @@
       height: 100%;
     }
 
-    .upload-area p { color: #888; font-size: 14px; }
-    .upload-area span { color: #5b6af0; font-weight: 500; }
+    .upload-area p { color: #9ca3af; font-size: 13px; }
+    .upload-area span { color: #4f46e5; font-weight: 600; }
 
-    #preview {
-      margin-top: 1rem;
-      display: none;
-    }
-
+    #preview { margin-top: 1rem; display: none; }
     #preview img {
       max-width: 100%;
       border-radius: 10px;
-      max-height: 250px;
+      max-height: 220px;
       object-fit: contain;
+      border: 1px solid #e5e7eb;
     }
 
     .solve-btn {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       padding: 14px;
-      background: #5b6af0;
+      background: #4f46e5;
       color: white;
       border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-bottom: 1.5rem;
-    }
-
-    .solve-btn:hover { background: #4a59e0; }
-    .solve-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
-
-    .result-card {
-      background: #1a1d27;
-      border: 1px solid #2a2d3a;
-      border-radius: 16px;
-      padding: 1.5rem;
-      width: 100%;
-      max-width: 720px;
-      display: none;
-    }
-
-    .result-card h2 {
-      font-size: 16px;
-      color: #5b6af0;
-      margin-bottom: 1.5rem;
-    }
-
-    .step-block {
-      background: #0f1117;
-      border: 1px solid #2a2d3a;
-      border-radius: 12px;
-      padding: 1.2rem 1.4rem;
-      margin-bottom: 1rem;
-    }
-
-    .step-header {
-      font-size: 14px;
+      border-radius: 14px;
+      font-size: 15px;
       font-weight: 700;
-      color: #5b6af0;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 2rem;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 14px rgba(79,70,229,0.3);
     }
 
-    .step-text {
-      font-size: 15px;
-      color: #ccc;
-      line-height: 1.8;
-    }
-
-    .formula-block {
-      background: #1e2235;
-      border: 1px solid #3a3f5c;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-family: monospace;
-      font-size: 15px;
-      color: #a5b4fc;
-      margin: 10px 0;
-      display: block;
-    }
-
-    .final-answer {
-      background: #1a2a1a;
-      border: 1px solid #2d5a2d;
-      border-radius: 12px;
-      padding: 1.2rem 1.4rem;
-      margin-top: 1rem;
-    }
-
-    .final-answer .step-header { color: #4ade80; }
-    .final-answer .step-text {
-      color: #86efac;
-      font-size: 16px;
-      font-weight: 500;
-    }
+    .solve-btn:hover { background: #4338ca; box-shadow: 0 6px 20px rgba(79,70,229,0.4); transform: translateY(-1px); }
+    .solve-btn:disabled { background: #c7d2fe; box-shadow: none; transform: none; cursor: not-allowed; }
 
     .loading {
       display: none;
       text-align: center;
       padding: 2rem;
-      color: #888;
+      color: #6b7280;
     }
 
     .loading-spinner {
       width: 36px;
       height: 36px;
-      border: 3px solid #2a2d3a;
-      border-top-color: #5b6af0;
+      border: 3px solid #e5e7eb;
+      border-top-color: #4f46e5;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       margin: 0 auto 1rem;
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Result area */
+    .result-wrapper {
+      width: 100%;
+      max-width: 780px;
+      display: none;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+    }
+
+    .result-header h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    .result-header .badge {
+      background: #eef2ff;
+      color: #4f46e5;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* Step block — two column layout */
+    .step-block {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    }
+
+    .step-block.final {
+      border-color: #6ee7b7;
+      background: #f0fdf4;
+    }
+
+    .step-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f3f4f6;
+      background: #fafafa;
+    }
+
+    .step-block.final .step-top {
+      background: #ecfdf5;
+      border-bottom-color: #d1fae5;
+    }
+
+    .step-number {
+      background: #4f46e5;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-block.final .step-number {
+      background: #10b981;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a2e;
+      flex: 1;
+    }
+
+    .step-body {
+      display: flex;
+      gap: 0;
+    }
+
+    .step-working {
+      flex: 1;
+      padding: 1rem 1.2rem;
+      border-right: 1px solid #f3f4f6;
+    }
+
+    .step-block.final .step-working {
+      border-right-color: #d1fae5;
+    }
+
+    .step-explanation {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.7;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    .working-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .working-line {
+      font-size: 15px;
+      color: #1a1a2e;
+      line-height: 1.7;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .working-line.math {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #1e3a5f;
+      background: #f0f4ff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin: 2px 0;
+    }
+
+    /* Formula sidebar */
+    .step-formula {
+      width: 200px;
+      flex-shrink: 0;
+      padding: 1rem;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .step-block.final .step-formula {
+      background: #ecfdf5;
+    }
+
+    .formula-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .formula-box {
+      background: white;
+      border: 1.5px solid #e0e7ff;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #4f46e5;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .step-block.final .formula-box {
+      border-color: #6ee7b7;
+      color: #059669;
+    }
+
+    .no-formula {
+      font-size: 12px;
+      color: #d1d5db;
+      font-style: italic;
+    }
+
+    /* Not math warning */
+    .not-math {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 16px;
+      padding: 1.2rem 1.4rem;
+    }
+
+    .not-math .step-title { color: #92400e; }
+    .not-math p { font-size: 14px; color: #78350f; line-height: 1.7; margin-top: 6px; }
+
+    @media (max-width: 600px) {
+      .step-body { flex-direction: column; }
+      .step-working { border-right: none; border-bottom: 1px solid #f3f4f6; }
+      .step-formula { width: 100%; }
+    }
   </style>
 </head>
 <body>
 
-  <h1>🧮 AI Math Tutor</h1>
-  <p class="subtitle">Type a problem or upload an image — get a step-by-step solution</p>
+  <div class="header">
+    <h1>🧮 <span>AI</span> Math Tutor</h1>
+    <p>Type a problem or upload an image — get a clear step-by-step solution</p>
+  </div>
 
-  <div class="card">
-    <label class="input-label">Type your math problem</label>
-    <textarea id="problem" placeholder="e.g. Solve: 2x² + 5x - 3 = 0"></textarea>
+  <div class="input-card">
+    <label class="input-label">Your math problem</label>
+    <textarea id="problem" placeholder="e.g. Differentiate f(x) = 3x³ + 2x² - 5x + 1"></textarea>
 
     <div class="upload-area">
       <input type="file" id="imageInput" accept="image/*" onchange="handleImage(event)" />
@@ -231,8 +372,11 @@
     <p>Solving your problem...</p>
   </div>
 
-  <div class="result-card" id="result">
-    <h2>📘 Step-by-Step Solution</h2>
+  <div class="result-wrapper" id="result">
+    <div class="result-header">
+      <h2>Step-by-Step Solution</h2>
+      <span class="badge">AI Explained</span>
+    </div>
     <div id="resultContent"></div>
   </div>
 
@@ -251,51 +395,46 @@
       reader.readAsDataURL(file);
     }
 
-    function formatSolution(text) {
-      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+    function renderSteps(stepsJson) {
       let html = '';
-      let currentStepLines = [];
-      let currentStepTitle = '';
-      let isFinal = false;
+      stepsJson.forEach((step, i) => {
+        const isFinal = step.is_final || false;
+        const blockClass = isFinal ? 'step-block final' : 'step-block';
+        const numLabel = isFinal ? '✓' : (i + 1);
+        const numStyle = isFinal ? 'step-number' : 'step-number';
 
-      function flushStep() {
-        if (!currentStepTitle && currentStepLines.length === 0) return;
-        const blockClass = isFinal ? 'step-block final-answer' : 'step-block';
-        html += `<div class="${blockClass}">`;
-        if (currentStepTitle) {
-          html += `<div class="step-header">${currentStepTitle}</div>`;
+        let workingHtml = '';
+        if (step.explanation) {
+          workingHtml += `<div class="step-explanation">${step.explanation}</div>`;
         }
-        html += `<div class="step-text">`;
-        for (const line of currentStepLines) {
-          if (line.match(/^formula:/i)) {
-            html += `<span class="formula-block">${line.replace(/^formula:\s*/i, '')}</span>`;
-          } else {
-            html += `${line}<br>`;
-          }
+        if (step.lines && step.lines.length > 0) {
+          workingHtml += `<div class="working-lines">`;
+          step.lines.forEach(line => {
+            const isMath = line.match(/[=+\-×÷^\/\\]/) && line.length < 80;
+            workingHtml += `<div class="working-line ${isMath ? 'math' : ''}">${line}</div>`;
+          });
+          workingHtml += `</div>`;
         }
-        html += `</div></div>`;
-        currentStepLines = [];
-        currentStepTitle = '';
-        isFinal = false;
-      }
 
-      for (const line of lines) {
-        if (line.match(/^step\s*\d+/i)) {
-          flushStep();
-          currentStepTitle = line.replace(/\*\*/g, '');
-        } else if (line.match(/^(final answer|conclusion|answer|result):/i) || line.match(/^#+\s*(final|answer)/i)) {
-          flushStep();
-          currentStepTitle = '✅ Final Answer';
-          isFinal = true;
-        } else if (line.match(/^#+\s*/)) {
-          flushStep();
-          currentStepTitle = line.replace(/^#+\s*/, '').replace(/\*\*/g, '');
+        let formulaHtml = '';
+        if (step.formula) {
+          formulaHtml = `<div class="formula-label">Formula Used</div><div class="formula-box">${step.formula}</div>`;
         } else {
-          currentStepLines.push(line.replace(/\*\*/g, ''));
+          formulaHtml = `<div class="no-formula">No formula</div>`;
         }
-      }
 
-      flushStep();
+        html += `
+          <div class="${blockClass}">
+            <div class="step-top">
+              <div class="${numStyle}">${numLabel}</div>
+              <div class="step-title">${step.title}</div>
+            </div>
+            <div class="step-body">
+              <div class="step-working">${workingHtml}</div>
+              <div class="step-formula">${formulaHtml}</div>
+            </div>
+          </div>`;
+      });
       return html;
     }
 
@@ -325,17 +464,23 @@
           return;
         }
 
-        const solution = data.choices[0].message.content;
+        const raw = data.choices[0].message.content;
 
-        if (solution.startsWith('NOT_MATH:')) {
-          const msg = solution.replace('NOT_MATH:', '').trim();
+        if (raw.startsWith('NOT_MATH:')) {
+          const msg = raw.replace('NOT_MATH:', '').trim();
           document.getElementById('resultContent').innerHTML = `
-            <div class="step-block">
-              <div class="step-header">⚠️ Not a Math Problem</div>
-              <div class="step-text">${msg}</div>
+            <div class="not-math">
+              <div class="step-title">⚠️ Not a Math Problem</div>
+              <p>${msg}</p>
             </div>`;
         } else {
-          document.getElementById('resultContent').innerHTML = formatSolution(solution);
+          try {
+            const cleaned = raw.replace(/```json|```/g, '').trim();
+            const steps = JSON.parse(cleaned);
+            document.getElementById('resultContent').innerHTML = renderSteps(steps);
+          } catch(e) {
+            document.getElementById('resultContent').innerHTML = `<div class="not-math"><div class="step-title">⚠️ Formatting Error</div><p>The AI returned an unexpected format. Please try again.</p></div>`;
+          }
         }
 
         document.getElementById('result').style.display = 'block';

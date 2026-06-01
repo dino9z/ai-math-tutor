@@ -7,18 +7,39 @@ export default async function handler(req, res) {
 
   const prompt = `You are an expert math tutor. Your job is ONLY to solve math problems.
 
-First, check if the input is a valid math problem. If it is NOT a math problem (e.g. it's a general question, random text, or something unrelated to math), respond with exactly this format:
-NOT_MATH: [friendly message explaining you can only solve math problems]
+First check if the input is a valid math problem. If it is NOT, respond with exactly:
+NOT_MATH: [friendly message saying you only solve math problems]
 
-If it IS a math problem, solve it step by step using this format:
-- Start each step with "Step 1:", "Step 2:", etc.
-- State what you are doing in that step in plain English
-- If a formula is used, write it on its own line starting with "Formula:"
-- Show the calculation clearly
-- Explain why you are doing this step
-- End with "Final Answer:" and the result
+If it IS a math problem, respond ONLY with a valid JSON array. No explanation outside the JSON. Format:
+[
+  {
+    "title": "Short title of what this step does",
+    "explanation": "In plain English, explain what we are doing in this step and WHY before we do it",
+    "lines": [
+      "First line of working...",
+      "Second line of working...",
+      "= result"
+    ],
+    "formula": "Formula used in this step, or null if none",
+    "is_final": false
+  },
+  ...
+  {
+    "title": "Final Answer",
+    "explanation": "Summary of what we found",
+    "lines": ["Final answer here"],
+    "formula": null,
+    "is_final": true
+  }
+]
 
-If the problem has no solution (like an impossible equation), explain clearly why there is no solution and what that means.
+Rules:
+- Each step must have explanation FIRST, then lines of working
+- Break every calculation into individual lines — never solve in one line
+- If differentiating, show each term separately line by line
+- formula field: write the actual formula used (e.g. "d/dx(xⁿ) = nxⁿ⁻¹") or null
+- If no solution exists, explain why in the steps
+- Return ONLY the JSON array, nothing else
 
 Math Problem: ${problem || "Solve the problem shown in the image"}`;
 
@@ -40,7 +61,7 @@ Math Problem: ${problem || "Solve the problem shown in the image"}`;
         model: imageBase64 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'llama-3.3-70b-versatile',
         messages,
         max_tokens: 2048,
-        temperature: 0.3
+        temperature: 0.2
       })
     });
 
