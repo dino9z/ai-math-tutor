@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Math Tutor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .subtitle {
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      border-radius: 16px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 720px;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-label {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      background: #0f1117;
+      border: 1px solid #2a2d3a;
+      border-radius: 10px;
+      color: #e0e0e0;
+      font-size: 15px;
+      padding: 12px;
+      resize: vertical;
+      min-height: 80px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    textarea:focus { border-color: #5b6af0; }
+
+    .upload-area {
+      border: 2px dashed #2a2d3a;
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      margin-top: 1rem;
+      position: relative;
+    }
+
+    .upload-area:hover { border-color: #5b6af0; }
+
+    .upload-area input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-area p { color: #888; font-size: 14px; }
+    .upload-area span { color: #5b6af0; font-weight: 500; }
+
+    #preview {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    #preview img {
+      max-width: 100%;
+      border-radius: 10px;
+      max-height: 250px;
+      object-fit: contain;
+    }
+
+    .solve-btn {
+      width: 100%;
+      max-width: 720px;
+      padding: 14px;
+      background: #5b6af0;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 1.5rem;
+    }
+
+    .solve-btn:hover { background: #4a59e0; }
+    .solve-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+    .result-card {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      border-radius: 16px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 720px;
+      display: none;
+    }
+
+    .result-card h2 {
+      font-size: 16px;
+      color: #5b6af0;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-content {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #e0e0e0;
+      white-space: pre-wrap;
+    }
+
+    .step {
+      background: #0f1117;
+      border-left: 3px solid #5b6af0;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin: 10px 0;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: #5b6af0;
+      margin-bottom: 4px;
+    }
+
+    .formula {
+      background: #1e2235;
+      border: 1px solid #3a3f5c;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-family: monospace;
+      font-size: 14px;
+      color: #a5b4fc;
+      display: inline-block;
+      margin: 4px 0;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      color: #888;
+    }
+
+    .loading-spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #2a2d3a;
+      border-top-color: #5b6af0;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <h1>🧮 AI Math Tutor</h1>
+  <p class="subtitle">Type a problem or upload an image — get a step-by-step solution</p>
+
+  <div class="card">
+    <label class="input-label">Type your math problem</label>
+    <textarea id="problem" placeholder="e.g. Solve: 2x² + 5x - 3 = 0"></textarea>
+
+    <div class="upload-area" id="uploadArea">
+      <input type="file" id="imageInput" accept="image/*" onchange="handleImage(event)" />
+      <p>📷 <span>Click to upload</span> or drag an image of your math problem</p>
+    </div>
+
+    <div id="preview">
+      <img id="previewImg" src="" alt="preview" />
+    </div>
+  </div>
+
+  <button class="solve-btn" onclick="solve()">⚡ Solve Step by Step</button>
+
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <p>Solving your problem...</p>
+  </div>
+
+  <div class="result-card" id="result">
+    <h2>📘 Step-by-Step Solution</h2>
+    <div class="result-content" id="resultContent"></div>
+  </div>
+
+  <script>
+    let imageBase64 = null;
+
+    function handleImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imageBase64 = e.target.result.split(',')[1];
+        document.getElementById('previewImg').src = e.target.result;
+        document.getElementById('preview').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function formatSolution(text) {
+      const lines = text.split('\n');
+      let html = '';
+
+      for (let line of lines) {
+        line = line.trim();
+        if (!line) { html += '<br>'; continue; }
+
+        if (line.match(/^(step\s*\d+|##)/i)) {
+          html += `<div class="step"><div class="step-title">${line}</div>`;
+        } else if (line.match(/^formula:/i)) {
+          html += `<div class="formula">${line}</div>`;
+        } else if (line.startsWith('**') && line.endsWith('**')) {
+          html += `<strong>${line.replace(/\*\*/g, '')}</strong><br>`;
+        } else {
+          html += `${line}<br>`;
+        }
+      }
+
+      return html;
+    }
+
+    async function solve() {
+      const problem = document.getElementById('problem').value.trim();
+
+      if (!problem && !imageBase64) {
+        alert('Please type a problem or upload an image!');
+        return;
+      }
+
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('result').style.display = 'none';
+      document.querySelector('.solve-btn').disabled = true;
+
+      try {
+        const response = await fetch('/api/solve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ problem, imageBase64 })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          alert('Error: ' + data.error.message);
+          return;
+        }
+
+        const solution = data.choices[0].message.content;
+        document.getElementById('resultContent').innerHTML = formatSolution(solution);
+        document.getElementById('result').style.display = 'block';
+
+      } catch (err) {
+        alert('Something went wrong: ' + err.message);
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.querySelector('.solve-btn').disabled = false;
+      }
+    }
+  </script>
+
+</body>
+</html>
